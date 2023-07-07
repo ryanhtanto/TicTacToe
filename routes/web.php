@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GameController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [GameController::class, 'homeIndex']);
+Route::get('/new-game', [GameController::class, 'newGameIndex']);
+Route::get('/history', [GameController::class, 'historyIndex']);
+Route::get('/csrf-token', function() {
+        return response()->json(['csrfToken' => csrf_token()]);
 });
+Route::post('/save', [GameController::class, 'save']);
+Route::get('/game-history/{id}', [GameController::class, 'show']);
