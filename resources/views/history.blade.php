@@ -3,6 +3,9 @@
 @section('container')
         @if(count($gameList) > 0)
                 <div id="historyList" class="">
+                        <a href="../" class="mx-3">
+                                <button type="button" class="btn btn-primary">Home</button>
+                        </a>
                         <table class="table">
                                 <thead>
                                         <tr>
@@ -16,8 +19,8 @@
                                         @foreach ($gameList as $game)
                                                 <tr>
                                                         <th scope="row">{{ $loop->iteration }}</th>
-                                                        <td>{{ $game->created_at }}</td>
-                                                        <td>{{ $game->updated_at }}</td>
+                                                        <td>{{ $game->created_at->format('Y-m-d H:i:s') }}</td>
+                                                        <td>{{ $game->updated_at->format('Y-m-d H:i:s') }}</td>
                                                         <td>
                                                                 <a href="../game-history/{{ $game->id }}" class="text-decoration-none">Load Game</a>
                                                         </td>

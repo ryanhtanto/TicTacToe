@@ -48,23 +48,29 @@ class GameController extends Controller
         }
 
         // Pass the game history record to the view
-        return view('history-game', ['gameHistory' => $gameHistory]);
+        return view('history-game', [
+            'gameHistory' => $gameHistory
+        ]);
     }
 
-    // public function updateMoves(Request $request, $id)
-    // {
-    //     // Retrieve the game history record based on the specific criteria
-    //     $gameHistory = Game::find($id);
+    public function updateMoves(Request $request, $id)
+    {
+        // Retrieve the game history record based on the specific criteria
+        $gameHistory = Game::find($id);
 
-    //     $moves = $request->input('moves');
+        $moves = $request->input('moves');
+        
+        // Retrieve the existing moves and append the new moves
+        $existingMoves = json_decode($gameHistory->moves);
+        $newMoves = json_decode($moves);
+        $updatedMoves = array_merge($existingMoves, $newMoves);
 
-    //     // Update the moves field with the new moves data
-    //     $gameHistory->moves = $moves;
+        // Update the moves field with the updated moves data
+        $gameHistory->moves = json_encode($updatedMoves);
 
-    //     // Save the updated game history record
-    //     $gameHistory->save();
+        // Save the updated game history record
+        $gameHistory->save();
 
-    //     return response()->json(['success' => true]);
-    // }
-
+        return response()->json(['success' => true]);
+    }
 }

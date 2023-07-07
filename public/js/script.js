@@ -43,10 +43,14 @@ function loadGameData(movesData) {
         const player = move.player;
         options[cellIndex] = player; // Update the options array
     });
+
     // Display the moves in the cells
     cells.forEach((cell, index) => {
         cell.textContent = options[index];
     });
+
+    // Check the winner and get the current player
+    checkWinner();
 }
 
 function cellClicked() {
@@ -62,9 +66,9 @@ function cellClicked() {
     // Save the move to the history
     moveHistory.push({
         index: cellIndex,
-        player: currentPlayer == "X" ? "O" : "X"
+        player: this.textContent
     });
-    console.log(moveHistory)
+
 }
 
 function updateCell(cell, index) {
@@ -130,21 +134,51 @@ function saveGameToDatabase(moveHistory) {
             // Extract the CSRF token from the response
             const csrfToken = response.csrfToken;
 
+            const gameId = document.querySelector("#saveBtn").dataset.gameId;
+
             // Send another AJAX request to the Laravel route to save the data
-            $.ajax({
-                url: "/save",
-                type: "POST",
-                data: { moves: moves },
-                
-                success: function(response) {
-                    console.log(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error saving game:", error);
-                    console.log(xhr);
-                    console.log(status);
-                }
-            });
+            // Check if the game ID is present
+            if (gameId) {
+                // Send the AJAX request to update the game data
+                $.ajax({
+                    url: "/update/" + gameId,
+                    type: "POST",
+                    data: {
+                        _token: csrfToken, // Include the CSRF token
+                        moves: moves,
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        alert('Game Saved');
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error updating game!");
+                        console.error("Error updating game:", error);
+                        console.log(xhr);
+                        console.log(status);
+                    },
+                });
+            } else {
+                // Send the AJAX request to save the game data
+                $.ajax({
+                    url: "/save",
+                    type: "POST",
+                    data: {
+                        _token: csrfToken, // Include the CSRF token
+                        moves: moves,
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        alert('Game Saved');
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error saving game!");
+                        console.error("Error saving game:", error);
+                        console.log(xhr);
+                        console.log(status);
+                    },
+                });
+            }
         },
             error: function(xhr, status, error) {
             console.error("Error retrieving CSRF token:", error);

@@ -16,8 +16,8 @@
         </div>
         <h2 id="statusText" class="text-center"></h2>
         <div class="d-flex align-items-center justify-content-center p-1">
-                <button id="restartBtn" type="button" class="btn btn-primary mx-3">Restart</button>
-                <button id="saveBtn" type="button" class="btn btn-primary mx-3">Update Game</button>   
+                <button id="restartBtn" type="button" class="btn btn-primary mx-3">Reset</button>
+                <button id="saveBtn" type="button" class="btn btn-primary mx-3" data-game-id="{{ $gameHistory->id }}">Save Game</button>   
         </div>
         <div class="d-flex align-items-center justify-content-center p-1">
                 <a href="../" class="mx-3">
