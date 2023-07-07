@@ -27,37 +27,27 @@ function initializeGame() {
     running = true;
 }
 
-// function initializeNewGame() {
-//     cells.forEach((cell) => cell.addEventListener("click", cellClicked));
-//     restartBtn.addEventListener("click", restartGame);
-//     saveBtn.addEventListener("click", saveGame); // Add event listener for save button
-//     statusText.textContent = `${currentPlayer}'s turn`;
-//     running = true;
-// }
+const movesData = document.querySelector("#movesData").textContent;
+loadGameData(movesData);
 
-// function loadGameData(movesData) {
-//     // Parse the moves data into an array
-//     const moves = JSON.parse(movesData);
+function loadGameData(movesData) {
+    // Parse the moves data into an array
+    const moves = JSON.parse(movesData);
 
-//     // Update the cells based on the moves data
-//     moves.forEach((move) => {
-//         const cellIndex = move.index;
-//         const player = move.player;
-//         updateCell(cells[cellIndex], cellIndex, player);
-//     });
-// }
+    // Reset the options array
+    options = ["", "", "", "", "", "", "", "", ""];
 
-// function initializeGame() {
-//     // Retrieve the moves data from the element
-//     const movesData = document.querySelector("#movesData").textContent;
-
-//     // Load the game data if available, otherwise initialize a new game
-//     if (movesData) {
-//         loadGameData(movesData);
-//     } else {
-//         initializeNewGame();
-//     }
-// }
+    // Update the cells based on the moves data
+    moves.forEach((move) => {
+        const cellIndex = move.index;
+        const player = move.player;
+        options[cellIndex] = player; // Update the options array
+    });
+    // Display the moves in the cells
+    cells.forEach((cell, index) => {
+        cell.textContent = options[index];
+    });
+}
 
 function cellClicked() {
     const cellIndex = this.getAttribute("cellIndex");
@@ -72,8 +62,9 @@ function cellClicked() {
     // Save the move to the history
     moveHistory.push({
         index: cellIndex,
-        player: currentPlayer
+        player: currentPlayer == "X" ? "O" : "X"
     });
+    console.log(moveHistory)
 }
 
 function updateCell(cell, index) {
@@ -131,36 +122,36 @@ function saveGame() {
 function saveGameToDatabase(moveHistory) {
 	// Convert the move history to a JSON string
 	const moves = JSON.stringify(moveHistory);
-    
+    console.log(moveHistory)
 	// Send a separate AJAX request to retrieve the CSRF token
 	$.ajax({
-	    url: "/csrf-token",
-	    type: "GET",
-	    success: function(response) {
-		// Extract the CSRF token from the response
-		const csrfToken = response.csrfToken;
+            url: "/csrf-token",
+            type: "GET",
+            success: function(response) {
+            // Extract the CSRF token from the response
+            const csrfToken = response.csrfToken;
 
-		// Send another AJAX request to the Laravel route to save the data
-		$.ajax({
-		    url: "/save",
-		    type: "POST",
-		    data: { moves: moves },
-		    headers: {
-			    'X-CSRF-TOKEN': csrfToken
-		    },
-		    success: function(response) {
-			    console.log(response);
-		    },
-		    error: function(xhr, status, error) {
-                console.error("Error saving game:", error);
-                console.log(xhr);
-                console.log(status);
-		    }
-		});
-	    },
+            // Send another AJAX request to the Laravel route to save the data
+            $.ajax({
+                url: "/save",
+                type: "POST",
+                data: { moves: moves },
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error saving game:", error);
+                    console.log(xhr);
+                    console.log(status);
+                }
+            });
+        },
             error: function(xhr, status, error) {
             console.error("Error retrieving CSRF token:", error);
-	    }
+        }
 	});
 }
     

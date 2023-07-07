@@ -26,10 +26,9 @@ class GameController extends Controller
 
     public function save(Request $request)
     {
+        // Validate the input
 
         $moves = $request->input('moves');
-
-        // Validate the input if necessary
 
         // Create a new game history record
         $game = new Game();
@@ -50,7 +49,22 @@ class GameController extends Controller
 
         // Pass the game history record to the view
         return view('history-game', ['gameHistory' => $gameHistory]);
-        
+    }
+
+    public function updateMoves(Request $request, $id)
+    {
+        // Retrieve the game history record based on the specific criteria
+        $gameHistory = Game::find($id);
+
+        $moves = $request->input('moves');
+
+        // Update the moves field with the new moves data
+        $gameHistory->moves = $moves;
+
+        // Save the updated game history record
+        $gameHistory->save();
+
+        return response()->json(['success' => true]);
     }
 
 }
