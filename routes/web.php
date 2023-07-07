@@ -21,5 +21,4 @@ Route::get('/csrf-token', function() {
         return response()->json(['csrfToken' => csrf_token()]);
 });
 Route::post('/save', [GameController::class, 'save']);
-// Route::post('/update-moves/{id}', GameController::class, 'updateMoves');
 Route::get('/game-history/{id}', [GameController::class, 'show']);

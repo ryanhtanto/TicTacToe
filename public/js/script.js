@@ -122,7 +122,6 @@ function saveGame() {
 function saveGameToDatabase(moveHistory) {
 	// Convert the move history to a JSON string
 	const moves = JSON.stringify(moveHistory);
-    console.log(moveHistory)
 	// Send a separate AJAX request to retrieve the CSRF token
 	$.ajax({
             url: "/csrf-token",
@@ -136,9 +135,7 @@ function saveGameToDatabase(moveHistory) {
                 url: "/save",
                 type: "POST",
                 data: { moves: moves },
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                },
+                
                 success: function(response) {
                     console.log(response);
                 },
@@ -154,4 +151,3 @@ function saveGameToDatabase(moveHistory) {
         }
 	});
 }
-    
