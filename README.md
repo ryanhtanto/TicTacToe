@@ -16,7 +16,7 @@ This is a web application that allows users to play the classic game Tic Tac Toe
 
 2. Access your MySQL database management tool (e.g., phpMyAdmin, MySQL command-line interface).
 
-3. Import the SQL file (tictactoe) into database. You can do this in one of the following ways:
+3. Import the SQL file (tictactoe.sql) into database. You can do this in one of the following ways:
 
    - **phpMyAdmin**: 
      - Open phpMyAdmin in your web browser.
