@@ -1,7 +1,16 @@
+/**
+ * Tic Tac Toe Game
+ *
+ * Handles the game logic and interaction.
+ */
+
+// Selectors
 const cells = document.querySelectorAll(".cell");
 const statusText = document.querySelector("#statusText");
 const restartBtn = document.querySelector("#restartBtn");
 const saveBtn = document.querySelector("#saveBtn");
+
+// Game Variables
 const winConditions = [
     [0, 1, 2],
     [3, 4, 5],
@@ -19,6 +28,9 @@ let moveHistory = [];
 
 initializeGame();
 
+/**
+ * Initialize the game.
+ */
 function initializeGame() {
     cells.forEach((cell) => cell.addEventListener("click", cellClicked));
     restartBtn.addEventListener("click", restartGame);
@@ -27,6 +39,10 @@ function initializeGame() {
     running = true;
 }
 
+/**
+ * Load the game data and update the UI.
+ * @param {string} movesData - The moves data in JSON format.
+ */
 const movesData = document.querySelector("#movesData").textContent;
 loadGameData(movesData);
 
@@ -36,6 +52,7 @@ function loadGameData(movesData) {
 
     // Reset the options array
     options = ["", "", "", "", "", "", "", "", ""];
+
 
     // Update the cells based on the moves data
     moves.forEach((move) => {
@@ -49,10 +66,13 @@ function loadGameData(movesData) {
         cell.textContent = options[index];
     });
 
-    // Check the winner and get the current player
+    // Check the winner
     checkWinner();
 }
 
+/**
+ * Handle the click event on a cell.
+ */
 function cellClicked() {
     const cellIndex = this.getAttribute("cellIndex");
 
@@ -71,16 +91,27 @@ function cellClicked() {
 
 }
 
+/**
+ * Update the selected cell with the current player's symbol.
+ * @param {Element} cell - The selected cell element.
+ * @param {number} index - The index of the cell.
+ */
 function updateCell(cell, index) {
     options[index] = currentPlayer;
     cell.textContent = currentPlayer;
 }
 
+/**
+ * Switch the current player.
+ */
 function changePlayer() {
     currentPlayer = currentPlayer == "X" ? "O" : "X";
     statusText.textContent = `${currentPlayer}'s turn`;
 }
 
+/**
+ * Check for a winner or draw.
+ */
 function checkWinner() {
     let roundWon = false;
 
@@ -110,6 +141,9 @@ function checkWinner() {
     }
 }
 
+/**
+ * Restart the game.
+ */
 function restartGame() {
     currentPlayer = "X";
     options = ["", "", "", "", "", "", "", "", ""];
@@ -119,10 +153,17 @@ function restartGame() {
     moveHistory = [];
 }
 
+/**
+ * Save the game data to the database when dave button clicked.
+ */
 function saveGame() {
     saveGameToDatabase(moveHistory);
 }
 
+/**
+ * Save the game data to the database using AJAX.
+ * @param {Array} moveHistory - The move history array.
+ */
 function saveGameToDatabase(moveHistory) {
 	// Convert the move history to a JSON string
 	const moves = JSON.stringify(moveHistory);
@@ -159,25 +200,30 @@ function saveGameToDatabase(moveHistory) {
                     },
                 });
             } else {
-                // Send the AJAX request to save the game data
-                $.ajax({
-                    url: "/save",
-                    type: "POST",
-                    data: {
-                        _token: csrfToken, // Include the CSRF token
-                        moves: moves,
-                    },
-                    success: function (response) {
-                        console.log(response);
-                        alert('Game Saved');
-                    },
-                    error: function (xhr, status, error) {
-                        alert("Error saving game!");
-                        console.error("Error saving game:", error);
-                        console.log(xhr);
-                        console.log(status);
-                    },
-                });
+                // calidate not null
+                if(moves !== '[]'){
+                    // Send the AJAX request to save the game data
+                    $.ajax({
+                        url: "/save",
+                        type: "POST",
+                        data: {
+                            _token: csrfToken, // Include the CSRF token
+                            moves: moves,
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            alert('Game Saved');
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error saving game!");
+                            console.error("Error saving game:", error);
+                            console.log(xhr);
+                            console.log(status);
+                        },
+                    });
+                }else{
+                    alert('Game can not be null!');
+                }
             }
         },
             error: function(xhr, status, error) {
