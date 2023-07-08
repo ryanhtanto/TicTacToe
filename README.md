@@ -34,3 +34,8 @@ This is a web application that allows users to play the classic game Tic Tac Toe
    DB_USERNAME=root
    DB_PASSWORD=
 
+## Run The App
+
+1. Start the local development server:
+   ```dotenv
+   php artisan serve
